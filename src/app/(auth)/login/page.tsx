@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createClient } from "@/lib/supabase/client"
 import { loginSchema, type LoginInput } from "@/lib/schemas/auth"
+import { Button } from "@/components/ui/Button"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -38,49 +39,45 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-bg px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Kos Saya</h1>
-          <p className="mt-1 text-sm text-gray-500">Masuk untuk melanjutkan</p>
+          <h1 className="text-2xl font-semibold text-text-primary">Kos Saya</h1>
+          <p className="mt-1 text-sm text-text-secondary">Masuk untuk melanjutkan</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Email</label>
             <input
               {...register("email")}
               type="email"
               autoComplete="email"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-border-strong rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="email@contoh.com"
             />
-            {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
+            {errors.email && <p className="mt-1 text-xs text-danger">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Password</label>
             <input
               {...register("password")}
               type="password"
               autoComplete="current-password"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-border-strong rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="••••••••"
             />
             {errors.password && (
-              <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>
+              <p className="mt-1 text-xs text-danger">{errors.password.message}</p>
             )}
           </div>
 
-          {serverError && <p className="text-sm text-red-600 text-center">{serverError}</p>}
+          {serverError && <p className="text-sm text-danger text-center">{serverError}</p>}
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg disabled:opacity-60"
-          >
-            {isSubmitting ? "Memproses..." : "Masuk"}
-          </button>
+          <Button type="submit" isLoading={isSubmitting}>
+            Masuk
+          </Button>
         </form>
       </div>
     </div>

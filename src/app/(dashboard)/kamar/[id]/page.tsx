@@ -7,6 +7,10 @@ import { useRoom, useUpdateRoom } from "@/lib/queries/rooms"
 import { roomSchema, type RoomInput } from "@/lib/schemas/room"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { FormGroup } from "@/components/ui/form/FormGroup"
+import { Input } from "@/components/ui/form/Input"
+import { Textarea } from "@/components/ui/form/Textarea"
+import { Button } from "@/components/ui/Button"
 
 export default function KamarDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -43,8 +47,8 @@ export default function KamarDetailPage() {
   if (isLoading) {
     return (
       <div className="p-4 space-y-3">
-        <div className="h-6 w-24 bg-gray-200 rounded animate-pulse" />
-        <div className="h-32 bg-gray-200 rounded-xl animate-pulse" />
+        <div className="h-6 w-24 bg-bg-elevated rounded animate-pulse" />
+        <div className="h-32 bg-bg-elevated rounded-xl animate-pulse" />
       </div>
     )
   }
@@ -61,7 +65,7 @@ export default function KamarDetailPage() {
   return (
     <div className="p-4">
       <div className="flex items-center gap-3 mb-4">
-        <button onClick={() => router.back()} className="text-gray-400 cursor-pointer">
+        <Button variant="secondary" size="icon" onClick={() => router.back()}>
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -71,87 +75,73 @@ export default function KamarDetailPage() {
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
           </svg>
-        </button>
-        <h1 className="text-lg font-semibold text-gray-900">Kamar {room.room_number}</h1>
-        <button
-          onClick={() => setIsEditing(!isEditing)}
-          className="ml-auto text-sm text-blue-600 font-medium"
-        >
+        </Button>
+        <h1 className="text-lg font-semibold text-text-primary">Kamar {room.room_number}</h1>
+        <Button variant="secondary" onClick={() => setIsEditing(!isEditing)} className="ml-auto">
           {isEditing ? "Batal" : "Edit"}
-        </button>
+        </Button>
       </div>
 
       {isEditing ? (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-4 bg-white rounded-xl p-4 border border-gray-100"
+          className="space-y-4 bg-bg-surface rounded-xl p-4 border border-border"
         >
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Nomor Kamar</label>
-            <input
-              {...register("room_number")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            />
-            {errors.room_number && (
-              <p className="text-xs text-red-600 mt-1">{errors.room_number.message}</p>
-            )}
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Harga Sewa (Rp)</label>
-            <input
+          <FormGroup label="Nomor Kamar" required error={errors.room_number?.message}>
+            <Input {...register("room_number")} placeholder="1" />
+          </FormGroup>
+          <FormGroup label="Harga Sewa" required error={errors.price?.message}>
+            <Input
               {...register("price", { valueAsNumber: true })}
               type="number"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              prefix="Rp"
+              placeholder="600000"
             />
-            {errors.price && <p className="text-xs text-red-600 mt-1">{errors.price.message}</p>}
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Fasilitas</label>
-            <textarea
-              {...register("facilities")}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg disabled:opacity-60"
+          </FormGroup>
+
+          <FormGroup
+            label="Fasilitas"
+            error={errors.facilities?.message}
+            hint="Pisahkan dengan koma. Contoh: Kasur, lemari, AC"
           >
-            {isSubmitting ? "Menyimpan..." : "Simpan Perubahan"}
-          </button>
+            <Textarea {...register("facilities")} rows={3} />
+          </FormGroup>
+          {/* <Button type="submit" isLoading={isSubmitting}> */}
+          <Button type="submit" isLoading={isSubmitting}>
+            Simpan Perubahan
+          </Button>
         </form>
       ) : (
-        <div className="bg-white rounded-xl p-4 border border-gray-100 mb-4">
+        <div className="bg-bg-surface rounded-xl p-4 border border-border mb-4">
           <div className="flex justify-between items-center mb-3">
-            <span className="text-sm text-gray-500">Harga Sewa</span>
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-sm text-text-secondary">Harga Sewa</span>
+            <span className="text-sm font-semibold text-text-primary">
               Rp {room.price.toLocaleString("id-ID")}/bulan
             </span>
           </div>
           <div>
-            <span className="text-sm text-gray-500">Fasilitas</span>
-            <p className="text-sm text-gray-900 mt-0.5">{room.facilities ?? "-"}</p>
+            <span className="text-sm text-text-secondary">Fasilitas</span>
+            <p className="text-sm text-text-primary mt-0.5">{room.facilities ?? "-"}</p>
           </div>
         </div>
       )}
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-sm font-semibold text-gray-900">
+          <h2 className="text-sm font-semibold text-text-primary">
             Penghuni Aktif ({activeTenants.length})
           </h2>
-          <Link href="/penghuni/tambah" className="text-xs text-blue-600 font-medium">
+          <Link href="/penghuni/tambah" className="text-xs text-primary font-medium">
             + Tambah
           </Link>
         </div>
 
         {activeTenants.length === 0 ? (
-          <div className="bg-white rounded-xl p-6 border border-gray-100 text-center">
-            <p className="text-sm text-gray-400">Belum ada penghuni di kamar ini</p>
+          <div className="bg-bg-surface rounded-xl p-6 border border-border text-center">
+            <p className="text-sm text-text-muted">Belum ada penghuni di kamar ini</p>
             <Link
               href="/penghuni/tambah"
-              className="mt-2 inline-block text-sm text-blue-600 font-medium"
+              className="mt-2 inline-block text-sm text-primary font-medium"
             >
               Tambah penghuni
             </Link>
@@ -163,10 +153,10 @@ export default function KamarDetailPage() {
                 <Link
                   key={tenant.id}
                   href={`/penghuni/${tenant.id}`}
-                  className="flex items-center gap-3 bg-white rounded-xl p-3 border border-gray-100"
+                  className="flex items-center gap-3 bg-bg-surface rounded-xl p-3 border border-border"
                 >
                   <div
-                    className="w-9 h-9 rounded-full bg-blue-100 text-blue-600
+                    className="w-9 h-9 rounded-full bg-bg-elevated text-primary
                   flex items-center justify-center text-sm font-medium shrink-0"
                   >
                     {tenant.full_name
@@ -176,8 +166,8 @@ export default function KamarDetailPage() {
                       .join("")}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{tenant.full_name}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-sm font-medium text-text-primary">{tenant.full_name}</p>
+                    <p className="text-xs text-text-muted">
                       Masuk{" "}
                       {new Date(tenant.check_in_date).toLocaleDateString("id-ID", {
                         day: "numeric",
@@ -191,7 +181,7 @@ export default function KamarDetailPage() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2}
-                    className="w-4 h-4 text-gray-300 ml-auto"
+                    className="w-4 h-4 text-text-muted ml-auto"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
                   </svg>

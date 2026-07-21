@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #faf9f6;
+  --color-bg-surface: #ffffff;
+  --color-bg-elevated: #f3f1ec;
+
+  --color-border: #e5e1da;
+  --color-border-strong: #c9c3b8;
+  --color-border-subtle: #eeeae3;
+
+  --color-text-primary: #1f1d1a;
+  --color-text-secondary: #56514a;
+  --color-text-muted: #8a8478;
+
+  --color-primary: #2f6f63;
+  --color-primary-hover: #255950;
+  --color-accent: #b8863f;
+  --color-accent-hover: #9a6f30;
+
+  --color-success: #3a8558;
+  --color-success-bg: #e7f2ea;
+  --color-warning: #c68a1d;
+  --color-warning-bg: #fbf1dd;
+  --color-danger: #c0392b;
+  --color-danger-hover: #a6301f;
+  --color-danger-bg: #fbeae8;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Background */
+  --color-bg: var(--color-bg);
+  --color-bg-surface: var(--color-bg-surface);
+  --color-bg-elevated: var(--color-bg-elevated);
+
+  /* Border */
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-border-subtle: var(--color-border-subtle);
+
+  /* Text */
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+
+  /* Brand */
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+
+  /* Status */
+  --color-success: var(--color-success);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning: var(--color-warning);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-danger: var(--color-danger);
+  --color-danger-hover: var(--color-danger-hover);
+  --color-danger-bg: var(--color-danger-bg);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  /* 
+  .card {
+    @apply bg-white rounded-xl border border-neutral-100 shadow-sm;
   }
+
+  .badge-success {
+    @apply px-2 py-0.5 bg-success-100 text-success-600 text-xs font-medium rounded-full;
+  }
+
+  .badge-warning {
+    @apply px-2 py-0.5 bg-warning-100 text-warning-600 text-xs font-medium rounded-full;
+  }
+
+  .badge-danger {
+    @apply px-2 py-0.5 bg-danger-100 text-danger-600 text-xs font-medium rounded-full;
+  }
+
+  .badge-neutral {
+    @apply px-2 py-0.5 bg-neutral-100 text-neutral-500 text-xs font-medium rounded-full;
+  } */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+/* Prevent browser autofill from forcing a white background on dark inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text-primary);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-bg-surface) inset;
+  box-shadow: 0 0 0px 1000px var(--color-bg-surface) inset;
+  transition: background-color 5000s ease-in-out 0s;
 }

@@ -14,10 +14,10 @@ export default function KamarPage() {
   if (isLoading) {
     return (
       <div className="p-4">
-        <div className="h-8 w-32 bg-gray-200 rounded animate-pulse mb-4" />
+        <div className="h-8 w-32 bg-bg-elevated rounded animate-pulse mb-4" />
         <div className="grid grid-cols-2 gap-3">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-28 bg-gray-200 rounded-xl animate-pulse" />
+            <div key={i} className="h-28 bg-bg-elevated rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -26,7 +26,7 @@ export default function KamarPage() {
 
   if (error) {
     return (
-      <div className="p-4 text-center text-sm text-red-600">
+      <div className="p-4 text-center text-sm text-danger">
         Gagal memuat data kamar. Coba refresh halaman.
       </div>
     )
@@ -38,14 +38,10 @@ export default function KamarPage() {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-lg font-semibold text-gray-900">Kamar</h1>
+        <h1 className="text-lg font-semibold text-text-primary">Kamar</h1>
         <div className="flex gap-2 text-xs">
-          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full">
-            {terisi} terisi
-          </span>
-          <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full">
-            {kosong} kosong
-          </span>
+          <span className="px-2 py-1 bg-success-bg text-success rounded-full">{terisi} terisi</span>
+          <span className="px-2 py-1 bg-warning-bg text-warning rounded-full">{kosong} kosong</span>
         </div>
       </div>
 
@@ -58,25 +54,25 @@ export default function KamarPage() {
             <Link
               key={room.id}
               href={`/kamar/${room.id}`}
-              className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm active:scale-95 transition-transform"
+              className="bg-bg-surface rounded-xl p-4 border border-border shadow-sm active:scale-95 transition-transform"
             >
               <div className="flex items-start justify-between mb-3">
-                <span className="text-2xl font-bold text-gray-900">{room.room_number}</span>
+                <span className="text-2xl font-bold text-text-primary">{room.room_number}</span>
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full font-medium
                   ${
                     status === "terisi"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
+                      ? "bg-success-bg text-success"
+                      : "bg-warning-bg text-warning"
                   }`}
                 >
                   {status === "terisi" ? "Terisi" : "Kosong"}
                 </span>
               </div>
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-text-primary">
                 Rp {room.price.toLocaleString("id-ID")}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="text-xs text-text-muted mt-0.5">
                 {activeTenants.length > 0
                   ? `${activeTenants.length} penghuni`
                   : "Belum ada penghuni"}

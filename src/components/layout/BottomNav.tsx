@@ -10,7 +10,8 @@ const navItems = [
     icon: (active: boolean) => (
       <svg
         viewBox="0 0 24 24"
-        fill={active ? "currentColor" : "none"}
+        // fill={active ? "currentColor" : "none"}
+        fill="none"
         stroke="currentColor"
         strokeWidth={2}
         className="w-6 h-6"
@@ -91,7 +92,7 @@ export function BottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-bg-surface border-t border-border z-50">
       <div className="max-w-md mx-auto flex">
         {navItems.map((item) => {
           const active = pathname === item.href
@@ -100,7 +101,7 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={`flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium transition-colors
-                ${active ? "text-blue-600" : "text-gray-400"}`}
+                ${active ? "text-primary" : "text-text-muted"}`}
             >
               {item.icon(active)}
               {item.label}
