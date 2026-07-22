@@ -15,8 +15,10 @@
 
   --color-primary: #2f6f63;
   --color-primary-hover: #255950;
+  --color-primary-bg: #e5efec;
   --color-accent: #b8863f;
   --color-accent-hover: #9a6f30;
+  --color-accent-bg: #f6ede0;
 
   --color-success: #3a8558;
   --color-success-bg: #e7f2ea;
@@ -46,8 +48,10 @@
   /* Brand */
   --color-primary: var(--color-primary);
   --color-primary-hover: var(--color-primary-hover);
+  --color-primary-bg: var(--color-primary-bg);
   --color-accent: var(--color-accent);
   --color-accent-hover: var(--color-accent-hover);
+  --color-accent-bg: var(--color-accent-bg);
 
   /* Status */
   --color-success: var(--color-success);

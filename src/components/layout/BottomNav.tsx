@@ -10,8 +10,7 @@ const navItems = [
     icon: (active: boolean) => (
       <svg
         viewBox="0 0 24 24"
-        // fill={active ? "currentColor" : "none"}
-        fill="none"
+        fill={active ? "currentColor" : "none"}
         stroke="currentColor"
         strokeWidth={2}
         className="w-6 h-6"
