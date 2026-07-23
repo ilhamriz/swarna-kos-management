@@ -13,7 +13,10 @@ const ktpPhotoSchema = z
 
 const tenantBaseSchema = z.object({
   full_name: z.string().min(1, "Nama lengkap wajib diisi"),
-  phone_number: z.string().min(1, "Nomor HP wajib diisi"),
+  phone_number: z
+    .string()
+    .min(1, "Nomor HP wajib diisi")
+    .regex(/^0\d{9,14}$/, "Nomor HP hanya boleh berisi angka, dimulai dengan 0"),
   room_id: z.string().min(1, "Kamar wajib dipilih"),
   emergency_contact_name: z.string().optional(),
   emergency_contact_phone: z.string().optional(),
