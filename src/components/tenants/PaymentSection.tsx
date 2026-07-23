@@ -53,8 +53,8 @@ export function PaymentSection({ tenantId }: PaymentSectionProps) {
               onViewProof={handleViewProof}
             />
           ))}
-          {/* TODO: default 5 */}
-          {payments.length > 2 && (
+
+          {payments.length > 5 && (
             <div className="pt-1 text-center">
               <Link
                 href={`/penghuni/${tenantId}/pembayaran`}

@@ -58,8 +58,7 @@ export function InvoiceSection({ tenantId }: InvoiceSectionProps) {
             <InvoiceListItem key={invoice.id} {...invoice} />
           ))}
 
-          {/* TODO: default 5 */}
-          {invoicesWithStatus.length > 2 && (
+          {invoicesWithStatus.length > 5 && (
             <div className="pt-1 text-center">
               <Link
                 href={`/penghuni/${tenantId}/invoice`}
