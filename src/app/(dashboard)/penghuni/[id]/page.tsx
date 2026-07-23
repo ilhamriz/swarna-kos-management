@@ -9,11 +9,8 @@ import { Button } from "@/components/ui/Button"
 import { IdCard, Whatsapp } from "@/components/ui/Icon"
 import { Input } from "@/components/ui/form/Input"
 import { PageHeader } from "@/components/layout/PageHeader"
-
-function normalizePhoneForWa(phone: string) {
-  const digits = phone.replace(/\D/g, "")
-  return digits.startsWith("0") ? `62${digits.slice(1)}` : digits
-}
+import { PaymentSection } from "@/components/tenants/PaymentSection"
+import { InvoiceSection } from "@/components/tenants/InvoiceSection"
 
 export default function PenghuniDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -44,9 +41,8 @@ export default function PenghuniDetailPage() {
   }
 
   function handleOpenWa() {
-    const phone = normalizePhoneForWa(tenant.phone_number)
     const message = encodeURIComponent(`Halo ${tenant.full_name},`)
-    window.open(`https://wa.me/${phone}?text=${message}`, "_blank")
+    window.open(`https://wa.me/${tenant.phone_number}?text=${message}`, "_blank")
   }
 
   async function handleConfirmCheckOut() {
@@ -111,13 +107,17 @@ export default function PenghuniDetailPage() {
             })}
           </span>
         </div>
-        {tenant.emergency_contact_name && (
+        {tenant?.emergency_contact_name && (
           <div className="flex justify-between items-center">
             <span className="text-sm text-text-secondary">Kontak Darurat</span>
-            <span className="text-sm font-medium text-text-primary">
-              {tenant.emergency_contact_name}
-              {tenant.emergency_contact_phone && ` · ${tenant.emergency_contact_phone}`}
-            </span>
+            <div className="flex flex-col items-end">
+              <span className="text-sm font-medium text-text-primary">
+                {tenant?.emergency_contact_name}
+              </span>
+              <span className="text-sm font-medium text-text-primary">
+                {tenant?.emergency_contact_phone}
+              </span>
+            </div>
           </div>
         )}
       </div>
@@ -132,6 +132,11 @@ export default function PenghuniDetailPage() {
           <IdCard size={20} />
           Lihat KTP
         </Button>
+      </div>
+
+      <div className="border-t border-border pt-4">
+        <InvoiceSection tenantId={id} />
+        <PaymentSection tenantId={id} />
       </div>
 
       {tenant.is_active && (
