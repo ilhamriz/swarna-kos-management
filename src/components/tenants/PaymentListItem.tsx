@@ -1,4 +1,4 @@
-import { Button } from "../ui/Button"
+import { OverflowMenu, type OverflowMenuItem } from "../ui/OverflowMenu"
 
 const methodLabels = {
   cash: "Tunai",
@@ -10,11 +10,12 @@ function formatRupiah(amount: number) {
 }
 
 interface PaymentListItemProps {
-  amount: number
-  payment_method: string
-  paid_at: string
-  proof_url?: string | null
-  onViewProof?: (path: string) => void
+  readonly amount: number
+  readonly payment_method: string
+  readonly paid_at: string
+  readonly proof_url?: string | null
+  readonly onViewProof?: (path: string) => void
+  readonly onDelete?: () => void
 }
 
 export function PaymentListItem({
@@ -23,7 +24,25 @@ export function PaymentListItem({
   paid_at,
   proof_url,
   onViewProof,
-}: PaymentListItemProps) {
+  onDelete,
+}: Readonly<PaymentListItemProps>) {
+  const menuItems: OverflowMenuItem[] = []
+
+  if (proof_url && onViewProof) {
+    menuItems.push({
+      label: "Lihat Bukti",
+      onClick: () => onViewProof(proof_url),
+    })
+  }
+
+  if (onDelete) {
+    menuItems.push({
+      label: "Hapus",
+      onClick: onDelete,
+      variant: "danger",
+    })
+  }
+
   return (
     <div className="bg-bg-surface rounded-xl p-3 border border-border flex items-center justify-between">
       <div>
@@ -37,16 +56,7 @@ export function PaymentListItem({
           })}
         </p>
       </div>
-      {proof_url && onViewProof && (
-        <Button
-          variant="ghost"
-          size="small"
-          onClick={() => onViewProof(proof_url)}
-          className="w-fit shrink-0"
-        >
-          Lihat Bukti
-        </Button>
-      )}
+      {menuItems.length > 0 ? <OverflowMenu items={menuItems} /> : null}
     </div>
   )
 }

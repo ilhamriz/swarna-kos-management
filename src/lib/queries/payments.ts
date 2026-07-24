@@ -60,6 +60,24 @@ export function useCreatePayment() {
   })
 }
 
+export function useDeletePayment() {
+  const supabase = createClient()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ id }: { id: string; tenantId: string }) => {
+      const { error } = await supabase.from("payment_transactions").delete().eq("id", id)
+
+      if (error) throw error
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: paymentKeys.byTenant(variables.tenantId) })
+      // Payments affect derived invoice status, so invoice queries must also refresh
+      queryClient.invalidateQueries({ queryKey: invoiceKeys.byTenant(variables.tenantId) })
+    },
+  })
+}
+
 export function useProofSignedUrl() {
   const supabase = createClient()
 

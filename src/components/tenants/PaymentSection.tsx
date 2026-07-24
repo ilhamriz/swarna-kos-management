@@ -1,22 +1,32 @@
 "use client"
 
 import Link from "next/link"
-import { useTenantPayments, useProofSignedUrl } from "@/lib/queries/payments"
+import { useState } from "react"
+import { useTenantPayments, useProofSignedUrl, useDeletePayment } from "@/lib/queries/payments"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/Button"
+import { ConfirmDialog } from "../ui/ConfirmDialog"
 import { PaymentListItem } from "./PaymentListItem"
 
 interface PaymentSectionProps {
-  tenantId: string
+  readonly tenantId: string
 }
 
 export function PaymentSection({ tenantId }: PaymentSectionProps) {
   const { data: payments, isLoading } = useTenantPayments(tenantId)
   const getProofUrl = useProofSignedUrl()
+  const deletePayment = useDeletePayment()
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
 
   async function handleViewProof(path: string) {
     const url = await getProofUrl.mutateAsync(path)
     window.open(url, "_blank")
+  }
+
+  async function handleConfirmDelete() {
+    if (!deleteTargetId) return
+    await deletePayment.mutateAsync({ id: deleteTargetId, tenantId })
+    setDeleteTargetId(null)
   }
 
   if (isLoading) {
@@ -51,6 +61,7 @@ export function PaymentSection({ tenantId }: PaymentSectionProps) {
               paid_at={payment.paid_at}
               proof_url={payment.proof_url}
               onViewProof={handleViewProof}
+              onDelete={() => setDeleteTargetId(payment.id)}
             />
           ))}
 
@@ -66,6 +77,18 @@ export function PaymentSection({ tenantId }: PaymentSectionProps) {
           )}
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={deleteTargetId !== null}
+        title="Hapus Pembayaran?"
+        description="Menghapus pembayaran ini akan mengubah status tagihan lain secara otomatis, karena status dihitung ulang dari total pembayaran yang tersisa. Tindakan ini tidak bisa dibatalkan."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+        confirmLabel="Hapus"
+        cancelLabel="Batal"
+        variant="danger"
+        isLoading={deletePayment?.isPending}
+      />
     </div>
   )
 }

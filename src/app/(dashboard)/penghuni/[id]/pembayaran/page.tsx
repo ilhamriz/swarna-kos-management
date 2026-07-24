@@ -1,9 +1,12 @@
+// penghuni/[id]/pembayaran
 "use client"
 
+import { useState } from "react"
 import { useParams } from "next/navigation"
-import { useTenantPayments, useProofSignedUrl } from "@/lib/queries/payments"
+import { useTenantPayments, useProofSignedUrl, useDeletePayment } from "@/lib/queries/payments"
 import { useTenant } from "@/lib/queries/tenants"
 import { PageHeader } from "@/components/layout/PageHeader"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { PaymentListItem } from "@/components/tenants/PaymentListItem"
 
 export default function SemuaPembayaranPage() {
@@ -11,10 +14,18 @@ export default function SemuaPembayaranPage() {
   const { data: tenant, isLoading: tenantLoading } = useTenant(id)
   const { data: payments, isLoading: paymentsLoading } = useTenantPayments(id)
   const getProofUrl = useProofSignedUrl()
+  const deletePayment = useDeletePayment()
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
 
   async function handleViewProof(path: string) {
     const url = await getProofUrl.mutateAsync(path)
     window.open(url, "_blank")
+  }
+
+  async function handleConfirmDelete() {
+    if (!deleteTargetId) return
+    await deletePayment.mutateAsync({ id: deleteTargetId, tenantId: id })
+    setDeleteTargetId(null)
   }
 
   if (tenantLoading || paymentsLoading) {
@@ -46,10 +57,23 @@ export default function SemuaPembayaranPage() {
               paid_at={payment.paid_at}
               proof_url={payment.proof_url}
               onViewProof={handleViewProof}
+              onDelete={() => setDeleteTargetId(payment.id)}
             />
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={deleteTargetId !== null}
+        title="Hapus Pembayaran?"
+        description="Menghapus pembayaran ini akan mengubah status tagihan lain secara otomatis, karena status dihitung ulang dari total pembayaran yang tersisa. Tindakan ini tidak bisa dibatalkan."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+        confirmLabel="Hapus"
+        cancelLabel="Batal"
+        variant="danger"
+        isLoading={deletePayment?.isPending}
+      />
     </div>
   )
 }

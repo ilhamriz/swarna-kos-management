@@ -13,7 +13,7 @@ function formatRupiah(amount: number) {
 }
 
 interface InvoiceSectionProps {
-  tenantId: string
+  readonly tenantId: string
 }
 
 export function InvoiceSection({ tenantId }: InvoiceSectionProps) {
@@ -55,7 +55,13 @@ export function InvoiceSection({ tenantId }: InvoiceSectionProps) {
       ) : (
         <div className="space-y-2">
           {displayInvoices.map((invoice) => (
-            <InvoiceListItem key={invoice.id} {...invoice} />
+            <Link
+              key={invoice.id}
+              href={`/penghuni/${tenantId}/invoice/${invoice.id}`}
+              className="block"
+            >
+              <InvoiceListItem {...invoice} />
+            </Link>
           ))}
 
           {invoicesWithStatus.length > 5 && (

@@ -1,3 +1,4 @@
+// penghuni/[id]/invoice
 "use client"
 
 import { useParams } from "next/navigation"
@@ -7,6 +8,7 @@ import { useTenant } from "@/lib/queries/tenants"
 import { deriveInvoiceStatuses } from "@/lib/invoice-status"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { InvoiceListItem } from "@/components/tenants/InvoiceListItem"
+import Link from "next/link"
 
 export default function SemuaInvoicePage() {
   const { id } = useParams<{ id: string }>()
@@ -40,7 +42,9 @@ export default function SemuaInvoicePage() {
       ) : (
         <div className="space-y-2">
           {displayInvoices.map((invoice) => (
-            <InvoiceListItem key={invoice.id} {...invoice} />
+            <Link key={invoice.id} href={`/penghuni/${id}/invoice/${invoice.id}`} className="block">
+              <InvoiceListItem {...invoice} />
+            </Link>
           ))}
         </div>
       )}
