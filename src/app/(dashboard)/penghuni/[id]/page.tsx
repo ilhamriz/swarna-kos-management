@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { useTenant } from "@/lib/queries/tenants"
-import { useKtpSignedUrl, useCheckOutTenant } from "@/lib/queries/tenants"
+import { useTenant, useKtpSignedUrl, useCheckOutTenant } from "@/lib/queries/tenants"
+import { useTenantBalance } from "@/lib/hooks/useTenantBalance"
 import { TenantForm } from "@/components/tenants/TenantForm"
 import { Button } from "@/components/ui/Button"
 import { IdCard, Whatsapp } from "@/components/ui/Icon"
@@ -18,6 +18,7 @@ export default function PenghuniDetailPage() {
   const { data: tenant, isLoading } = useTenant(id)
   const getSignedUrl = useKtpSignedUrl()
   const checkOutTenant = useCheckOutTenant()
+  const { saldoTunggakan } = useTenantBalance(id)
 
   const [isEditing, setIsEditing] = useState(false)
   const [showCheckOut, setShowCheckOut] = useState(false)
@@ -157,6 +158,12 @@ export default function PenghuniDetailPage() {
               <p className="text-xs text-text-secondary">
                 Tindakan ini tidak bisa dibatalkan. Penghuni akan dipindahkan ke daftar tidak aktif.
               </p>
+              {saldoTunggakan > 0 && (
+                <p className="py-1 px-2 text-xs text-warning font-medium bg-warning-bg">
+                  Penghuni ini masih memiliki tunggakan Rp {saldoTunggakan.toLocaleString("id-ID")}.
+                  Anda tetap bisa menandai keluar.
+                </p>
+              )}
               <Input
                 type="date"
                 value={checkOutDate}

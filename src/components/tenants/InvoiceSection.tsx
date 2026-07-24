@@ -3,11 +3,8 @@
 import Link from "next/link"
 import { useTenantInvoices } from "@/lib/queries/invoices"
 import { useTenantPayments } from "@/lib/queries/payments"
-import {
-  deriveInvoiceStatuses,
-  calculateOverpayment,
-  calculateSaldoTunggakan,
-} from "@/lib/invoice-status"
+import { deriveInvoiceStatuses } from "@/lib/invoice-status"
+import { useTenantBalance } from "@/lib/hooks/useTenantBalance"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/Button"
 import { InvoiceListItem } from "./InvoiceListItem"
@@ -23,6 +20,7 @@ interface InvoiceSectionProps {
 export function InvoiceSection({ tenantId }: InvoiceSectionProps) {
   const { data: invoices, isLoading: invoicesLoading } = useTenantInvoices(tenantId)
   const { data: payments, isLoading: paymentsLoading } = useTenantPayments(tenantId)
+  const { saldoTunggakan, overpayment } = useTenantBalance(tenantId)
 
   if (invoicesLoading || paymentsLoading) {
     return <div className="h-32 bg-bg-elevated rounded-xl animate-pulse mb-4" />
@@ -30,8 +28,6 @@ export function InvoiceSection({ tenantId }: InvoiceSectionProps) {
 
   const totalPaid = payments?.reduce((sum, p) => sum + p.amount, 0) ?? 0
   const invoicesWithStatus = deriveInvoiceStatuses(invoices ?? [], totalPaid)
-  const saldoTunggakan = calculateSaldoTunggakan(invoices ?? [], totalPaid)
-  const overpayment = calculateOverpayment(invoices ?? [], totalPaid)
   const displayInvoices = [...invoicesWithStatus].reverse().slice(0, 5)
 
   return (
