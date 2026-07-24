@@ -58,3 +58,11 @@ export function calculateSaldoTunggakan(invoices: { amount_due: number }[], tota
   const totalDue = invoices.reduce((sum, inv) => sum + inv.amount_due, 0)
   return Math.max(0, totalDue - totalPaid)
 }
+
+export function calculateOverpayment(
+  invoices: { amount_due: number }[],
+  totalPaid: number
+): number {
+  const totalDue = invoices.reduce((sum, inv) => sum + inv.amount_due, 0)
+  return Math.max(0, totalPaid - totalDue)
+}

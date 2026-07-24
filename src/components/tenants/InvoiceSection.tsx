@@ -3,7 +3,11 @@
 import Link from "next/link"
 import { useTenantInvoices } from "@/lib/queries/invoices"
 import { useTenantPayments } from "@/lib/queries/payments"
-import { deriveInvoiceStatuses, calculateSaldoTunggakan } from "@/lib/invoice-status"
+import {
+  deriveInvoiceStatuses,
+  calculateOverpayment,
+  calculateSaldoTunggakan,
+} from "@/lib/invoice-status"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/Button"
 import { InvoiceListItem } from "./InvoiceListItem"
@@ -27,6 +31,7 @@ export function InvoiceSection({ tenantId }: InvoiceSectionProps) {
   const totalPaid = payments?.reduce((sum, p) => sum + p.amount, 0) ?? 0
   const invoicesWithStatus = deriveInvoiceStatuses(invoices ?? [], totalPaid)
   const saldoTunggakan = calculateSaldoTunggakan(invoices ?? [], totalPaid)
+  const overpayment = calculateOverpayment(invoices ?? [], totalPaid)
   const displayInvoices = [...invoicesWithStatus].reverse().slice(0, 5)
 
   return (
@@ -45,6 +50,13 @@ export function InvoiceSection({ tenantId }: InvoiceSectionProps) {
         <div className="bg-danger-bg rounded-xl p-3 mb-3">
           <p className="text-xs text-text-secondary">Saldo Tunggakan</p>
           <p className="text-lg font-semibold text-danger">{formatRupiah(saldoTunggakan)}</p>
+        </div>
+      )}
+
+      {overpayment > 0 && (
+        <div className="bg-success-bg rounded-xl p-3 mb-3">
+          <p className="text-xs text-text-secondary">Kelebihan Bayar</p>
+          <p className="text-lg font-semibold text-success">{formatRupiah(overpayment)}</p>
         </div>
       )}
 
