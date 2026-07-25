@@ -25,6 +25,20 @@ export function useTenantPayments(tenantId: string) {
   })
 }
 
+export function useAllPayments() {
+  const supabase = createClient()
+
+  return useQuery({
+    queryKey: ["payments", "all"] as const,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("payment_transactions").select("*")
+
+      if (error) throw error
+      return data
+    },
+  })
+}
+
 async function uploadProofPhoto(supabase: ReturnType<typeof createClient>, file: File) {
   const fileExt = file.name.split(".").pop()
   const fileName = `${crypto.randomUUID()}.${fileExt}`

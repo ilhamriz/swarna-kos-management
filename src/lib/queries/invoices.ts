@@ -26,6 +26,20 @@ export function useTenantInvoices(tenantId: string) {
   })
 }
 
+export function useAllInvoices() {
+  const supabase = createClient()
+
+  return useQuery({
+    queryKey: invoiceKeys.all,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("invoices").select("*")
+
+      if (error) throw error
+      return data
+    },
+  })
+}
+
 export function useInvoice(id: string) {
   const supabase = createClient()
 

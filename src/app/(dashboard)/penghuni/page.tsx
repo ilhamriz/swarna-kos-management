@@ -3,6 +3,9 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useTenants } from "@/lib/queries/tenants"
+import { useAllInvoices } from "@/lib/queries/invoices"
+import { useAllPayments } from "@/lib/queries/payments"
+import { getTenantSaldoTunggakan } from "@/lib/invoice-status"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { FilterTabs } from "@/components/ui/FilterTabs"
 
@@ -10,6 +13,8 @@ type FilterStatus = "semua" | "aktif" | "tidak_aktif"
 
 export default function PenghuniPage() {
   const { data: tenants, isLoading, error } = useTenants()
+  const { data: allInvoices, isLoading: invoicesLoading } = useAllInvoices()
+  const { data: allPayments, isLoading: paymentsLoading } = useAllPayments()
   const [filter, setFilter] = useState<FilterStatus>("aktif")
 
   const filteredTenants = tenants?.filter((tenant) => {
@@ -18,7 +23,7 @@ export default function PenghuniPage() {
     return true
   })
 
-  if (isLoading) {
+  if (isLoading || invoicesLoading || paymentsLoading) {
     return (
       <div className="p-4 space-y-3">
         <div className="h-8 w-32 bg-bg-elevated rounded animate-pulse" />
@@ -66,34 +71,52 @@ export default function PenghuniPage() {
         </div>
       ) : (
         <div className="space-y-2">
-          {filteredTenants?.map((tenant) => (
-            <Link
-              key={tenant.id}
-              href={`/penghuni/${tenant.id}`}
-              className="flex items-center gap-3 bg-bg-surface rounded-xl p-3 border border-border transition-colors duration-300 hover:bg-bg-elevated"
-            >
-              <div className="w-9 h-9 rounded-full bg-primary-bg text-primary flex items-center justify-center text-sm font-medium shrink-0">
-                {tenant.full_name
-                  .split(" ")
-                  .map((n: string) => n[0])
-                  .slice(0, 2)
-                  .join("")}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-text-primary truncate">{tenant.full_name}</p>
-                <p className="text-xs text-text-muted">
-                  Kamar {tenant.rooms?.room_number} · {tenant.phone_number}
-                </p>
-              </div>
-              <span
-                className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${
-                  tenant.is_active ? "bg-success-bg text-success" : "bg-bg-elevated text-text-muted"
-                }`}
+          {filteredTenants?.map((tenant) => {
+            const saldoTunggakan = getTenantSaldoTunggakan(
+              tenant.id,
+              allInvoices ?? [],
+              allPayments ?? []
+            )
+            return (
+              <Link
+                key={tenant.id}
+                href={`/penghuni/${tenant.id}`}
+                className="flex items-center gap-3 bg-bg-surface rounded-xl p-3 border border-border transition-colors duration-300 hover:bg-bg-elevated"
               >
-                {tenant.is_active ? "Aktif" : "Keluar"}
-              </span>
-            </Link>
-          ))}
+                <div className="w-9 h-9 rounded-full bg-primary-bg text-primary flex items-center justify-center text-sm font-medium shrink-0">
+                  {tenant.full_name
+                    .split(" ")
+                    .map((n: string) => n[0])
+                    .slice(0, 2)
+                    .join("")}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-text-primary truncate">
+                    {tenant.full_name}
+                  </p>
+                  <p className="text-xs text-text-muted">
+                    Kamar {tenant.rooms?.room_number} · {tenant.phone_number}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {saldoTunggakan > 0 && (
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-danger-bg text-danger">
+                      Ada tunggakan
+                    </span>
+                  )}
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      tenant.is_active
+                        ? "bg-success-bg text-success"
+                        : "bg-bg-elevated text-text-muted"
+                    }`}
+                  >
+                    {tenant.is_active ? "Aktif" : "Keluar"}
+                  </span>
+                </div>
+              </Link>
+            )
+          })}
         </div>
       )}
     </div>

@@ -66,3 +66,14 @@ export function calculateOverpayment(
   const totalDue = invoices.reduce((sum, inv) => sum + inv.amount_due, 0)
   return Math.max(0, totalPaid - totalDue)
 }
+
+export function getTenantSaldoTunggakan(
+  tenantId: string,
+  allInvoices: { tenant_id: string; amount_due: number }[],
+  allPayments: { tenant_id: string; amount: number }[]
+): number {
+  const tenantInvoices = allInvoices.filter((inv) => inv.tenant_id === tenantId)
+  const tenantPayments = allPayments.filter((p) => p.tenant_id === tenantId)
+  const totalPaid = tenantPayments.reduce((sum, p) => sum + p.amount, 0)
+  return calculateSaldoTunggakan(tenantInvoices, totalPaid)
+}
