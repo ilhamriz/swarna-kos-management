@@ -5,13 +5,9 @@ import { useTenantInvoices } from "@/lib/queries/invoices"
 import { useTenantPayments } from "@/lib/queries/payments"
 import { deriveInvoiceStatuses } from "@/lib/invoice-status"
 import { useTenantBalance } from "@/lib/hooks/useTenantBalance"
-import { cn } from "@/lib/utils"
+import { cn, formatRupiah } from "@/lib/utils"
 import { buttonVariants } from "../ui/Button"
 import { InvoiceListItem } from "./InvoiceListItem"
-
-function formatRupiah(amount: number) {
-  return `Rp ${amount.toLocaleString("id-ID")}`
-}
 
 interface InvoiceSectionProps {
   readonly tenantId: string

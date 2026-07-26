@@ -1,12 +1,8 @@
 import { OverflowMenu, type OverflowMenuItem } from "../ui/OverflowMenu"
-
+import { formatRupiah } from "@/lib/utils"
 const methodLabels = {
   cash: "Tunai",
   transfer: "Transfer",
-}
-
-function formatRupiah(amount: number) {
-  return `Rp ${amount.toLocaleString("id-ID")}`
 }
 
 interface PaymentListItemProps {

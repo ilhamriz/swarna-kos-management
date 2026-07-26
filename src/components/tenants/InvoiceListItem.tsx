@@ -1,4 +1,5 @@
 import type { InvoiceStatus } from "@/lib/invoice-status"
+import { formatRupiah } from "@/lib/utils"
 
 const statusStyles = {
   lunas: "bg-success-bg text-success",
@@ -10,10 +11,6 @@ const statusLabels = {
   lunas: "Lunas",
   belum: "Belum",
   telat: "Telat",
-}
-
-function formatRupiah(amount: number) {
-  return `Rp ${amount.toLocaleString("id-ID")}`
 }
 
 function formatPeriod(start: string, end: string) {

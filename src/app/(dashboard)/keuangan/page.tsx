@@ -6,10 +6,7 @@ import { useExpenses } from "@/lib/queries/expenses"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { ExpenseListItem } from "@/components/expenses/ExpenseListItem"
 import { Input } from "@/components/ui/form/Input"
-
-function formatRupiah(amount: number) {
-  return `Rp ${amount.toLocaleString("id-ID")}`
-}
+import { formatRupiah } from "@/lib/utils"
 
 function getCurrentMonth() {
   const now = new Date()

@@ -1,8 +1,5 @@
 import { expenseCategoryLabels, type expenseCategories } from "@/lib/schemas/expense"
-
-function formatRupiah(amount: number) {
-  return `Rp ${amount.toLocaleString("id-ID")}`
-}
+import { formatRupiah } from "@/lib/utils"
 
 interface ExpenseListItemProps {
   category: (typeof expenseCategories)[number]

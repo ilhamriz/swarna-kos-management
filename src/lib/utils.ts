@@ -14,3 +14,7 @@ export function fromWhatsappFormat(phone: string): string {
   const digits = phone.replace(/\D/g, "")
   return digits.startsWith("62") ? `0${digits.slice(2)}` : digits
 }
+
+export function formatRupiah(amount: number) {
+  return `Rp ${amount.toLocaleString("id-ID")}`
+}

@@ -18,10 +18,7 @@ import { Textarea } from "@/components/ui/form/Textarea"
 import { Select } from "@/components/ui/form/Select"
 import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
-
-function formatRupiah(amount: number) {
-  return `Rp ${amount.toLocaleString("id-ID")}`
-}
+import { formatRupiah } from "@/lib/utils"
 
 export default function ExpenseDetailPage() {
   const { id } = useParams<{ id: string }>()
