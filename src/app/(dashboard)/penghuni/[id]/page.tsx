@@ -36,12 +36,13 @@ export default function PenghuniDetailPage() {
   if (!tenant) return null
 
   async function handleViewKtp() {
-    if (!tenant.ktp_photo_url) return
+    if (!tenant || !tenant.ktp_photo_url) return
     const url = await getSignedUrl.mutateAsync(tenant.ktp_photo_url)
     window.open(url, "_blank")
   }
 
   function handleOpenWa() {
+    if (!tenant) return
     const message = encodeURIComponent(`Halo ${tenant.full_name},`)
     window.open(`https://wa.me/${tenant.phone_number}?text=${message}`, "_blank")
   }

@@ -71,7 +71,6 @@ export default function InvoiceDetailPage() {
     formState: { errors, isSubmitting },
   } = useForm<InvoiceInput>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: invoice ?? undefined,
   })
 
   useEffect(() => {

@@ -55,7 +55,7 @@ export default function KamarDetailPage() {
 
   if (!room) return null
 
-  const activeTenants = room.tenants.filter((t: { is_active: boolean }) => t.is_active)
+  const activeTenants = room.tenants.filter((t) => t.is_active)
 
   async function onSubmit(values: RoomInput) {
     await updateRoom.mutateAsync({ id, data: values })

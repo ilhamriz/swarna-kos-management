@@ -11,7 +11,7 @@ function formatRupiah(amount: number) {
 
 interface PaymentListItemProps {
   readonly amount: number
-  readonly payment_method: string
+  readonly payment_method: "cash" | "transfer"
   readonly paid_at: string
   readonly proof_url?: string | null
   readonly onViewProof?: (path: string) => void
@@ -48,7 +48,7 @@ export function PaymentListItem({
       <div>
         <p className="text-sm font-medium text-text-primary">{formatRupiah(amount)}</p>
         <p className="text-xs text-text-muted">
-          {methodLabels[payment_method as keyof typeof methodLabels]} ·{" "}
+          {methodLabels[payment_method]} ·{" "}
           {new Date(paid_at).toLocaleDateString("id-ID", {
             day: "numeric",
             month: "short",

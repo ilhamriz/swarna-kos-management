@@ -46,7 +46,7 @@ export type Database = {
       expenses: {
         Row: {
           amount: number
-          category: string
+          category: Database["public"]["Enums"]["expense_category"]
           created_at: string | null
           description: string | null
           expense_date: string
@@ -54,7 +54,7 @@ export type Database = {
         }
         Insert: {
           amount: number
-          category: string
+          category: Database["public"]["Enums"]["expense_category"]
           created_at?: string | null
           description?: string | null
           expense_date: string
@@ -62,7 +62,7 @@ export type Database = {
         }
         Update: {
           amount?: number
-          category?: string
+          category?: Database["public"]["Enums"]["expense_category"]
           created_at?: string | null
           description?: string | null
           expense_date?: string
@@ -118,7 +118,7 @@ export type Database = {
           id: string
           notes: string | null
           paid_at: string
-          payment_method: string
+          payment_method: Database["public"]["Enums"]["payment_method_type"]
           proof_url: string | null
           tenant_id: string
         }
@@ -128,7 +128,7 @@ export type Database = {
           id?: string
           notes?: string | null
           paid_at: string
-          payment_method: string
+          payment_method: Database["public"]["Enums"]["payment_method_type"]
           proof_url?: string | null
           tenant_id: string
         }
@@ -138,7 +138,7 @@ export type Database = {
           id?: string
           notes?: string | null
           paid_at?: string
-          payment_method?: string
+          payment_method?: Database["public"]["Enums"]["payment_method_type"]
           proof_url?: string | null
           tenant_id?: string
         }
@@ -234,7 +234,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      expense_category: "listrik" | "sampah" | "air" | "wifi" | "maintenance" | "lainnya"
+      payment_method_type: "cash" | "transfer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -355,6 +356,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      expense_category: ["listrik", "sampah", "air", "wifi", "maintenance", "lainnya"],
+      payment_method_type: ["cash", "transfer"],
+    },
   },
 } as const

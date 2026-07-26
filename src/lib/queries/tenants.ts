@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { createClient } from "@/lib/supabase/client"
 import type { TenantCreateInput, TenantEditInput, TenantCheckOutInput } from "@/lib/schemas/tenant"
+import { TablesUpdate } from "../database.types"
 
 export const tenantKeys = {
   all: ["tenants"] as const,
@@ -97,7 +98,7 @@ export function useUpdateTenant() {
     mutationFn: async ({ id, data }: { id: string; data: TenantEditInput }) => {
       const { ktp_photo, ...tenantData } = data
 
-      const updatePayload: Record<string, unknown> = { ...tenantData }
+      const updatePayload: TablesUpdate<"tenants"> = { ...tenantData }
 
       if (ktp_photo) {
         updatePayload.ktp_photo_url = await uploadKtpPhoto(supabase, ktp_photo)

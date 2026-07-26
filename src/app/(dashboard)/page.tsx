@@ -6,8 +6,7 @@ import { useRooms } from "@/lib/queries/rooms"
 export default function HomePage() {
   const { data: rooms, isLoading } = useRooms()
 
-  const terisi =
-    rooms?.filter((r) => r.tenants.some((t: { is_active: boolean }) => t.is_active)).length ?? 0
+  const terisi = rooms?.filter((r) => r.tenants.some((t) => t.is_active)).length ?? 0
   const kosong = (rooms?.length ?? 0) - terisi
 
   return (

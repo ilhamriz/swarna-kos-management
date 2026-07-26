@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useRooms } from "@/lib/queries/rooms"
 
-function getRoomStatus(tenants: { is_active: boolean }[]) {
+function getRoomStatus(tenants: { is_active: boolean | null }[]) {
   const hasActiveTenant = tenants.some((t) => t.is_active)
   return hasActiveTenant ? "terisi" : "kosong"
 }
@@ -48,7 +48,7 @@ export default function KamarPage() {
       <div className="grid grid-cols-2 gap-3">
         {rooms?.map((room) => {
           const status = getRoomStatus(room.tenants)
-          const activeTenants = room.tenants.filter((t: { is_active: boolean }) => t.is_active)
+          const activeTenants = room.tenants.filter((t) => t.is_active)
 
           return (
             <Link
