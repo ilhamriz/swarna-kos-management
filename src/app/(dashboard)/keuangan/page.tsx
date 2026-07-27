@@ -13,6 +13,12 @@ function getCurrentMonth() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
 }
 
+function formatMonthLabel(monthString: string) {
+  const [year, month] = monthString.split("-")
+  const date = new Date(Number(year), Number(month) - 1)
+  return date.toLocaleDateString("id-ID", { month: "long", year: "numeric" })
+}
+
 export default function KeuanganPage() {
   const { data: expenses, isLoading } = useExpenses()
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth())
@@ -47,13 +53,17 @@ export default function KeuanganPage() {
       </div>
 
       <div className="bg-bg-elevated rounded-xl p-3 mb-4">
-        <p className="text-xs text-text-secondary">Total Pengeluaran Bulan Ini</p>
+        <p className="text-xs text-text-secondary">
+          Total Pengeluaran {formatMonthLabel(selectedMonth)}
+        </p>
         <p className="text-lg font-semibold text-text-primary">{formatRupiah(totalBulanIni)}</p>
       </div>
 
       {!filteredExpenses || filteredExpenses.length === 0 ? (
         <div className="bg-bg-surface rounded-xl p-6 border border-border text-center">
-          <p className="text-sm text-text-muted">Belum ada pengeluaran di bulan ini</p>
+          <p className="text-sm text-text-muted">
+            Belum ada pengeluaran di {formatMonthLabel(selectedMonth)}
+          </p>
         </div>
       ) : (
         <div className="space-y-2">
