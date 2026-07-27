@@ -19,7 +19,6 @@ export function ExpenseListItem({
       <div>
         <p className="text-sm font-medium text-text-primary">{expenseCategoryLabels[category]}</p>
         <p className="text-xs text-text-muted">
-          {formatRupiah(amount)} ·{" "}
           {new Date(expense_date).toLocaleDateString("id-ID", {
             day: "numeric",
             month: "short",
@@ -28,6 +27,8 @@ export function ExpenseListItem({
         </p>
         {description && <p className="text-xs text-text-secondary mt-0.5">{description}</p>}
       </div>
+
+      <div className="text-sm font-semibold text-text-primary shrink-0">{formatRupiah(amount)}</div>
     </div>
   )
 }
