@@ -13,6 +13,7 @@ export const buttonVariants = cva(
           "bg-transparent text-text-primary border border-border hover:bg-bg-elevated hover:border-border-strong",
         ghost: "bg-transparent text-primary hover:bg-bg-elevated",
         danger: "bg-danger text-white hover:bg-danger-hover",
+        ghost_danger: "bg-transparent text-danger hover:bg-danger-bg",
       },
       size: {
         default: "h-11 px-4 min-w-[44px]",

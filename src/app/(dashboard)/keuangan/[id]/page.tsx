@@ -143,7 +143,7 @@ export default function ExpenseDetailPage() {
             )}
           </div>
 
-          <Button variant="danger" size="small" onClick={() => setIsDeleteOpen(true)}>
+          <Button variant="ghost_danger" onClick={() => setIsDeleteOpen(true)} className="w-fit">
             Hapus Pengeluaran
           </Button>
         </div>

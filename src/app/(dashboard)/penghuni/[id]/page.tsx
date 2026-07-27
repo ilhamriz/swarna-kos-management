@@ -144,11 +144,7 @@ export default function PenghuniDetailPage() {
       {tenant.is_active && (
         <div className="border-t border-border pt-4">
           {!showCheckOut ? (
-            <Button
-              variant="ghost"
-              onClick={() => setShowCheckOut(true)}
-              className="w-fit text-sm text-danger hover:bg-danger-bg"
-            >
+            <Button variant="ghost_danger" onClick={() => setShowCheckOut(true)} className="w-fit">
               Tandai Keluar
             </Button>
           ) : (
