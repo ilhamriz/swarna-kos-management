@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/form/Input"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PaymentSection } from "@/components/tenants/PaymentSection"
 import { InvoiceSection } from "@/components/tenants/InvoiceSection"
+import { ContactLogSection } from "@/components/tenants/ContactLogSection"
 
 export default function PenghuniDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -139,6 +140,7 @@ export default function PenghuniDetailPage() {
       <div className="border-t border-border pt-4">
         <InvoiceSection tenantId={id} />
         <PaymentSection tenantId={id} />
+        <ContactLogSection tenantId={id} />
       </div>
 
       {tenant.is_active && (

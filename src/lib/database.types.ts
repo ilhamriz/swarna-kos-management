@@ -10,26 +10,26 @@ export type Database = {
     Tables: {
       contact_logs: {
         Row: {
-          contacted_at: string | null
+          contacted_at: string
           created_at: string | null
           id: string
-          method: string
+          method: Database["public"]["Enums"]["contact_method"]
           notes: string | null
           tenant_id: string
         }
         Insert: {
-          contacted_at?: string | null
+          contacted_at?: string
           created_at?: string | null
           id?: string
-          method: string
+          method: Database["public"]["Enums"]["contact_method"]
           notes?: string | null
           tenant_id: string
         }
         Update: {
-          contacted_at?: string | null
+          contacted_at?: string
           created_at?: string | null
           id?: string
-          method?: string
+          method?: Database["public"]["Enums"]["contact_method"]
           notes?: string | null
           tenant_id?: string
         }
@@ -234,6 +234,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      contact_method: "whatsapp" | "phone" | "other"
       expense_category: "listrik" | "sampah" | "air" | "wifi" | "maintenance" | "lainnya"
       payment_method_type: "cash" | "transfer"
     }
@@ -357,6 +358,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      contact_method: ["whatsapp", "phone", "other"],
       expense_category: ["listrik", "sampah", "air", "wifi", "maintenance", "lainnya"],
       payment_method_type: ["cash", "transfer"],
     },
