@@ -19,9 +19,16 @@ interface TenantFormProps {
   tenantId?: string
   defaultValues?: Partial<TenantEditInput>
   currentKtpUrl?: string | null
+  onSuccess?: () => void
 }
 
-export function TenantForm({ mode, tenantId, defaultValues, currentKtpUrl }: TenantFormProps) {
+export function TenantForm({
+  mode,
+  tenantId,
+  defaultValues,
+  currentKtpUrl,
+  onSuccess,
+}: TenantFormProps) {
   const router = useRouter()
   const { data: rooms } = useRooms()
   const createTenant = useCreateTenant()
@@ -59,10 +66,14 @@ export function TenantForm({ mode, tenantId, defaultValues, currentKtpUrl }: Ten
       // Zod's tenantCreateSchema already guaranteed ktp_photo exists at this point,
       // even though TenantEditInput's type says it's optional.
       await createTenant.mutateAsync(payload as TenantEditInput & { ktp_photo: File })
-    } else if (tenantId) {
-      await updateTenant.mutateAsync({ id: tenantId, data: payload })
+      router.push("/penghuni")
+      return
     }
-    router.push(mode === "create" ? "/penghuni" : `/penghuni/${tenantId}`)
+
+    if (tenantId) {
+      await updateTenant.mutateAsync({ id: tenantId, data: payload })
+      onSuccess?.()
+    }
   }
 
   return (

@@ -75,6 +75,7 @@ export default function PenghuniDetailPage() {
             emergency_contact_phone: tenant.emergency_contact_phone ?? "",
             check_in_date: tenant.check_in_date,
           }}
+          onSuccess={() => setIsEditing(false)}
         />
       </div>
     )
