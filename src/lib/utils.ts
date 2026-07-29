@@ -18,3 +18,10 @@ export function fromWhatsappFormat(phone: string): string {
 export function formatRupiah(amount: number) {
   return `Rp ${amount.toLocaleString("id-ID")}`
 }
+
+export function formatPeriod(start: string, end: string) {
+  const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" }
+  return `${new Date(start).toLocaleDateString("id-ID", options)} - ${new Date(
+    end
+  ).toLocaleDateString("id-ID", { ...options, year: "numeric" })}`
+}
