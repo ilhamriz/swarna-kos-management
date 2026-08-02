@@ -31,29 +31,34 @@ export function PageHeader({
   link,
   menuItems,
 }: Readonly<PageHeaderProps>) {
+  let rightSlot: React.ReactNode = null
+
+  if (menuItems?.length) {
+    rightSlot = <OverflowMenu items={menuItems} className="ml-auto" />
+  } else if (action) {
+    rightSlot = (
+      <Button
+        variant={action.variant ?? "ghost"}
+        onClick={action.onClick}
+        isLoading={action.isLoading}
+        className="w-fit ml-auto"
+      >
+        {action.label}
+      </Button>
+    )
+  } else if (link) {
+    rightSlot = (
+      <Link href={link.href} className={cn(buttonVariants({ variant: "ghost" }), "w-fit ml-auto")}>
+        {link.label}
+      </Link>
+    )
+  }
+
   return (
     <div className="flex items-center gap-3 mb-4">
       {showBack && <ButtonBack />}
       <h1 className="text-lg font-semibold text-text-primary truncate">{title}</h1>
-      {menuItems?.length ? (
-        <OverflowMenu items={menuItems} className="ml-auto" />
-      ) : action ? (
-        <Button
-          variant={action.variant ?? "ghost"}
-          onClick={action.onClick}
-          isLoading={action.isLoading}
-          className="w-fit ml-auto"
-        >
-          {action.label}
-        </Button>
-      ) : link ? (
-        <Link
-          href={link.href}
-          className={cn(buttonVariants({ variant: "ghost" }), "w-fit ml-auto")}
-        >
-          {link.label}
-        </Link>
-      ) : null}
+      {rightSlot}
     </div>
   )
 }
