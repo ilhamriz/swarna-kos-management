@@ -1,14 +1,6 @@
-import { deriveInvoiceStatuses } from "@/lib/invoice-status"
+import { deriveInvoiceStatuses, type Invoice } from "@/lib/invoice-status"
 
 export type ReminderBucket = "telat" | "jatuh_tempo_hari_ini" | "belum"
-
-interface Invoice {
-  id: string
-  amount_due: number
-  due_date: string
-  period_start: string
-  period_end: string
-}
 
 interface Payment {
   amount: number
@@ -24,6 +16,14 @@ interface ReminderInfo {
     due_date: string
     amount_remaining: number
   }[]
+}
+
+export interface UpcomingDueInvoice {
+  tenantId: string
+  tenantName: string
+  invoiceId: string
+  due_date: string
+  amount_remaining: number
 }
 
 function isSameDay(dateString: string, reference: Date) {
@@ -96,4 +96,45 @@ export const reminderBucketLabels: Record<ReminderBucket, string> = {
   telat: "Telat",
   jatuh_tempo_hari_ini: "Jatuh Tempo Hari Ini",
   belum: "Belum Bayar",
+}
+
+/**
+ * Returns all unpaid invoices (any tenant) with due_date within the next 7 days
+ * (inclusive of today), sorted soonest-due first.
+ */
+export function getUpcomingDueInvoices(
+  tenants: { id: string; full_name: string }[],
+  allInvoices: (Invoice & { tenant_id: string })[],
+  allPayments: (Payment & { tenant_id: string })[]
+): UpcomingDueInvoice[] {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const sevenDaysOut = new Date(today)
+  sevenDaysOut.setDate(sevenDaysOut.getDate() + 7)
+
+  const result: UpcomingDueInvoice[] = []
+
+  for (const tenant of tenants) {
+    const tenantInvoices = allInvoices.filter((inv) => inv.tenant_id === tenant.id)
+    const tenantPayments = allPayments.filter((p) => p.tenant_id === tenant.id)
+    const totalPaid = tenantPayments.reduce((sum, p) => sum + p.amount, 0)
+    const statuses = deriveInvoiceStatuses(tenantInvoices, totalPaid)
+
+    for (const invoice of statuses) {
+      if (invoice.status === "lunas") continue
+      const dueDate = new Date(invoice.due_date)
+      dueDate.setHours(0, 0, 0, 0)
+      if (dueDate >= today && dueDate <= sevenDaysOut) {
+        result.push({
+          tenantId: tenant.id,
+          tenantName: tenant.full_name,
+          invoiceId: invoice.id,
+          due_date: invoice.due_date,
+          amount_remaining: invoice.amount_remaining,
+        })
+      }
+    }
+  }
+
+  return result.sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime())
 }

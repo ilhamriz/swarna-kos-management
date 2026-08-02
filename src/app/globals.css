@@ -67,26 +67,9 @@
 }
 
 @layer components {
-  /* 
   .card {
-    @apply bg-white rounded-xl border border-neutral-100 shadow-sm;
+    @apply bg-white rounded-lg border border-neutral-100;
   }
-
-  .badge-success {
-    @apply px-2 py-0.5 bg-success-100 text-success-600 text-xs font-medium rounded-full;
-  }
-
-  .badge-warning {
-    @apply px-2 py-0.5 bg-warning-100 text-warning-600 text-xs font-medium rounded-full;
-  }
-
-  .badge-danger {
-    @apply px-2 py-0.5 bg-danger-100 text-danger-600 text-xs font-medium rounded-full;
-  }
-
-  .badge-neutral {
-    @apply px-2 py-0.5 bg-neutral-100 text-neutral-500 text-xs font-medium rounded-full;
-  } */
 }
 
 body {

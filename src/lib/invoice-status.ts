@@ -2,8 +2,9 @@
 
 export type InvoiceStatus = "lunas" | "belum" | "telat"
 
-interface Invoice {
+export interface Invoice {
   id: string
+  tenant_id?: string
   amount_due: number
   due_date: string
   period_start: string
