@@ -61,6 +61,38 @@ export function useRoom(id: string) {
   })
 }
 
+export function useCreateRoom() {
+  const supabase = createClient()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (data: RoomInput) => {
+      const { error } = await supabase.from("rooms").insert(data)
+
+      if (error) throw error
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: roomKeys.all })
+    },
+  })
+}
+
+export function useDeleteRoom() {
+  const supabase = createClient()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("rooms").delete().eq("id", id)
+
+      if (error) throw error
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: roomKeys.all })
+    },
+  })
+}
+
 export function useUpdateRoom() {
   const supabase = createClient()
   const queryClient = useQueryClient()

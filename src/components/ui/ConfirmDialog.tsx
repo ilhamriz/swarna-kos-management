@@ -11,6 +11,7 @@ export type ConfirmDialogProps = {
   onConfirm: () => void | Promise<void>
   onCancel: () => void
   isLoading?: boolean
+  confirmDisabled?: boolean
   variant?: "default" | "danger"
 }
 
@@ -23,8 +24,9 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
   isLoading,
+  confirmDisabled,
   variant = "danger",
-}: ConfirmDialogProps) {
+}: Readonly<ConfirmDialogProps>) {
   if (!isOpen) return null
 
   return (
@@ -56,6 +58,7 @@ export function ConfirmDialog({
             variant={variant === "danger" ? "danger" : "primary"}
             onClick={onConfirm}
             isLoading={isLoading}
+            disabled={confirmDisabled || isLoading}
           >
             {confirmLabel}
           </Button>

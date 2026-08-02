@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { useRoom, useUpdateRoom } from "@/lib/queries/rooms"
+import { useRoom, useUpdateRoom, useDeleteRoom } from "@/lib/queries/rooms"
 import { roomSchema, type RoomInput } from "@/lib/schemas/room"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -11,13 +11,17 @@ import { FormGroup } from "@/components/ui/form/FormGroup"
 import { Input } from "@/components/ui/form/Input"
 import { Textarea } from "@/components/ui/form/Textarea"
 import { Button } from "@/components/ui/Button"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { PageHeader } from "@/components/layout/PageHeader"
 
 export default function KamarDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
   const { data: room, isLoading } = useRoom(id)
   const updateRoom = useUpdateRoom()
+  const deleteRoom = useDeleteRoom()
   const [isEditing, setIsEditing] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
   const {
     register,
@@ -56,31 +60,37 @@ export default function KamarDetailPage() {
   if (!room) return null
 
   const activeTenants = room.tenants.filter((t) => t.is_active)
+  const hasAnyTenantHistory = room.tenants.length > 0
 
   async function onSubmit(values: RoomInput) {
     await updateRoom.mutateAsync({ id, data: values })
     setIsEditing(false)
   }
 
+  async function handleDeleteConfirm() {
+    await deleteRoom.mutateAsync(id)
+    setIsDeleteOpen(false)
+    router.push("/kamar")
+  }
+
   return (
     <div className="p-4">
-      <div className="flex items-center gap-3 mb-4">
-        <Button variant="secondary" size="icon" onClick={() => router.back()}>
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            className="w-5 h-5"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
-          </svg>
-        </Button>
-        <h1 className="text-lg font-semibold text-text-primary">Kamar {room.room_number}</h1>
-        <Button variant="secondary" onClick={() => setIsEditing(!isEditing)} className="ml-auto">
-          {isEditing ? "Batal" : "Edit"}
-        </Button>
-      </div>
+      {isEditing ? (
+        <PageHeader
+          title={`Kamar ${room.room_number}`}
+          showBack
+          action={{ label: "Batal", onClick: () => setIsEditing(false) }}
+        />
+      ) : (
+        <PageHeader
+          title={`Kamar ${room.room_number}`}
+          showBack
+          menuItems={[
+            { label: "Edit", onClick: () => setIsEditing(true) },
+            { label: "Hapus", onClick: () => setIsDeleteOpen(true), variant: "danger" },
+          ]}
+        />
+      )}
 
       {isEditing ? (
         <form
@@ -106,7 +116,6 @@ export default function KamarDetailPage() {
           >
             <Textarea {...register("facilities")} rows={3} />
           </FormGroup>
-          {/* <Button type="submit" isLoading={isSubmitting}> */}
           <Button type="submit" isLoading={isSubmitting}>
             Simpan Perubahan
           </Button>
@@ -191,6 +200,22 @@ export default function KamarDetailPage() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        isOpen={isDeleteOpen}
+        title="Hapus Kamar?"
+        description={
+          hasAnyTenantHistory
+            ? "Kamar ini pernah memiliki penghuni dan tidak bisa dihapus."
+            : "Tindakan ini tidak bisa dibatalkan."
+        }
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setIsDeleteOpen(false)}
+        confirmLabel="Hapus"
+        variant="danger"
+        isLoading={deleteRoom.isPending}
+        confirmDisabled={hasAnyTenantHistory}
+      />
     </div>
   )
 }

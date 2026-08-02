@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Button } from "./Button"
 import { Kebab } from "./Icon"
+import { cn } from "@/lib/utils"
 
 export type OverflowMenuItem = {
   label: string
@@ -12,9 +13,10 @@ export type OverflowMenuItem = {
 
 export type OverflowMenuProps = {
   items: OverflowMenuItem[]
+  className?: string
 }
 
-export function OverflowMenu({ items }: Readonly<OverflowMenuProps>) {
+export function OverflowMenu({ items, className }: Readonly<OverflowMenuProps>) {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -30,7 +32,7 @@ export function OverflowMenu({ items }: Readonly<OverflowMenuProps>) {
   }, [])
 
   return (
-    <div ref={containerRef} className="relative inline-flex">
+    <div ref={containerRef} className={cn("relative inline-flex", className)}>
       <Button
         variant="ghost"
         size="icon"

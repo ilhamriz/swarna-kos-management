@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useRooms } from "@/lib/queries/rooms"
+import { PageHeader } from "@/components/layout/PageHeader"
 
 function getRoomStatus(tenants: { is_active: boolean | null }[]) {
   const hasActiveTenant = tenants.some((t) => t.is_active)
@@ -32,18 +33,9 @@ export default function KamarPage() {
     )
   }
 
-  const terisi = rooms?.filter((r) => getRoomStatus(r.tenants) === "terisi").length ?? 0
-  const kosong = (rooms?.length ?? 0) - terisi
-
   return (
     <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-lg font-semibold text-text-primary">Kamar</h1>
-        <div className="flex gap-2 text-xs">
-          <span className="px-2 py-1 bg-success-bg text-success rounded-full">{terisi} terisi</span>
-          <span className="px-2 py-1 bg-warning-bg text-warning rounded-full">{kosong} kosong</span>
-        </div>
-      </div>
+      <PageHeader title="Kamar" showBack link={{ label: "+ Tambah", href: "/kamar/tambah" }} />
 
       <div className="grid grid-cols-2 gap-3">
         {rooms?.map((room) => {
