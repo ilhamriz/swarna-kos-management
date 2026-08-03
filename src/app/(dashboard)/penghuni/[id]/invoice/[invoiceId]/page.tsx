@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { FormGroup } from "@/components/ui/form/FormGroup"
 import { Input } from "@/components/ui/form/Input"
+import { CurrencyInput } from "@/components/ui/form/CurrencyInput"
 import { Textarea } from "@/components/ui/form/Textarea"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { cn, formatRupiah } from "@/lib/utils"
@@ -62,6 +63,7 @@ export default function InvoiceDetailPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -124,7 +126,7 @@ export default function InvoiceDetailPage() {
           </FormGroup>
 
           <FormGroup label="Nominal" required error={errors.amount_due?.message}>
-            <Input prefix="Rp" type="number" {...register("amount_due", { valueAsNumber: true })} />
+            <CurrencyInput name="amount_due" control={control} />
           </FormGroup>
 
           <FormGroup label="Jatuh Tempo" required error={errors.due_date?.message}>

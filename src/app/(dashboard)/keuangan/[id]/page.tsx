@@ -14,6 +14,7 @@ import { useExpense, useUpdateExpense, useDeleteExpense } from "@/lib/queries/ex
 import { PageHeader } from "@/components/layout/PageHeader"
 import { FormGroup } from "@/components/ui/form/FormGroup"
 import { Input } from "@/components/ui/form/Input"
+import { CurrencyInput } from "@/components/ui/form/CurrencyInput"
 import { Textarea } from "@/components/ui/form/Textarea"
 import { Select } from "@/components/ui/form/Select"
 import { Button } from "@/components/ui/Button"
@@ -31,6 +32,7 @@ export default function ExpenseDetailPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -93,7 +95,7 @@ export default function ExpenseDetailPage() {
           </FormGroup>
 
           <FormGroup label="Nominal" required error={errors.amount?.message}>
-            <Input prefix="Rp" type="number" {...register("amount", { valueAsNumber: true })} />
+            <CurrencyInput name="amount" control={control} />
           </FormGroup>
 
           <FormGroup label="Tanggal" required error={errors.expense_date?.message}>

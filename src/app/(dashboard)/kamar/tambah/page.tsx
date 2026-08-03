@@ -7,6 +7,7 @@ import { roomSchema, type RoomInput } from "@/lib/schemas/room"
 import { useCreateRoom } from "@/lib/queries/rooms"
 import { FormGroup } from "@/components/ui/form/FormGroup"
 import { Input } from "@/components/ui/form/Input"
+import { CurrencyInput } from "@/components/ui/form/CurrencyInput"
 import { Textarea } from "@/components/ui/form/Textarea"
 import { Button } from "@/components/ui/Button"
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -17,6 +18,7 @@ export default function TambahKamarPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<RoomInput>({
@@ -38,7 +40,7 @@ export default function TambahKamarPage() {
         </FormGroup>
 
         <FormGroup label="Harga Sewa" required error={errors.price?.message}>
-          <Input prefix="Rp" type="number" {...register("price", { valueAsNumber: true })} />
+          <CurrencyInput name="price" control={control} placeholder="500.000" />
         </FormGroup>
 
         <FormGroup label="Fasilitas" error={errors.facilities?.message}>

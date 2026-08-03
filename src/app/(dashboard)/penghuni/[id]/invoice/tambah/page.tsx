@@ -7,6 +7,7 @@ import { invoiceSchema, type InvoiceInput } from "@/lib/schemas/invoice"
 import { useCreateInvoice } from "@/lib/queries/invoices"
 import { FormGroup } from "@/components/ui/form/FormGroup"
 import { Input } from "@/components/ui/form/Input"
+import { CurrencyInput } from "@/components/ui/form/CurrencyInput"
 import { Textarea } from "@/components/ui/form/Textarea"
 import { Button } from "@/components/ui/Button"
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -18,6 +19,7 @@ export default function TambahInvoicePage() {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<InvoiceInput>({
@@ -43,7 +45,7 @@ export default function TambahInvoicePage() {
         </FormGroup>
 
         <FormGroup label="Nominal" required error={errors.amount_due?.message}>
-          <Input prefix="Rp" type="number" {...register("amount_due", { valueAsNumber: true })} />
+          <CurrencyInput name="amount_due" control={control} />
         </FormGroup>
 
         <FormGroup label="Jatuh Tempo" required error={errors.due_date?.message}>

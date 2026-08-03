@@ -7,6 +7,7 @@ import { paymentSchema, type PaymentInput } from "@/lib/schemas/payment"
 import { useCreatePayment } from "@/lib/queries/payments"
 import { FormGroup } from "@/components/ui/form/FormGroup"
 import { Input } from "@/components/ui/form/Input"
+import { CurrencyInput } from "@/components/ui/form/CurrencyInput"
 import { Textarea } from "@/components/ui/form/Textarea"
 import { Select } from "@/components/ui/form/Select"
 import { FileInput } from "@/components/ui/form/FileInput"
@@ -41,7 +42,7 @@ export default function TambahPembayaranPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <FormGroup label="Nominal" required error={errors.amount?.message}>
-          <Input prefix="Rp" type="number" {...register("amount", { valueAsNumber: true })} />
+          <CurrencyInput name="amount" control={control} />
         </FormGroup>
 
         <FormGroup label="Metode Pembayaran" required error={errors.payment_method?.message}>

@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormGroup } from "@/components/ui/form/FormGroup"
 import { Input } from "@/components/ui/form/Input"
+import { CurrencyInput } from "@/components/ui/form/CurrencyInput"
 import { Textarea } from "@/components/ui/form/Textarea"
 import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
@@ -25,6 +26,7 @@ export default function KamarDetailPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
@@ -101,12 +103,7 @@ export default function KamarDetailPage() {
             <Input {...register("room_number")} placeholder="1" />
           </FormGroup>
           <FormGroup label="Harga Sewa" required error={errors.price?.message}>
-            <Input
-              {...register("price", { valueAsNumber: true })}
-              type="number"
-              prefix="Rp"
-              placeholder="600000"
-            />
+            <CurrencyInput name="price" control={control} placeholder="500.000" />
           </FormGroup>
 
           <FormGroup
