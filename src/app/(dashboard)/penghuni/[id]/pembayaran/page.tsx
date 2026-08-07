@@ -2,6 +2,7 @@
 "use client"
 
 import { useState } from "react"
+import { toast } from "sonner"
 import { useParams } from "next/navigation"
 import { useTenantPayments, useProofSignedUrl, useDeletePayment } from "@/lib/queries/payments"
 import { useTenant } from "@/lib/queries/tenants"
@@ -24,8 +25,13 @@ export default function SemuaPembayaranPage() {
 
   async function handleConfirmDelete() {
     if (!deleteTargetId) return
-    await deletePayment.mutateAsync({ id: deleteTargetId, tenantId: id })
-    setDeleteTargetId(null)
+    try {
+      await deletePayment.mutateAsync({ id: deleteTargetId, tenantId: id })
+      toast.success("Pembayaran berhasil dihapus")
+      setDeleteTargetId(null)
+    } catch {
+      toast.error("Gagal menghapus data")
+    }
   }
 
   if (tenantLoading || paymentsLoading) {

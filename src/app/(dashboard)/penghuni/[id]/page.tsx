@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useTenant, useKtpSignedUrl, useCheckOutTenant } from "@/lib/queries/tenants"
 import { useTenantBalance } from "@/lib/hooks/useTenantBalance"
 import { TenantForm } from "@/components/tenants/TenantForm"
@@ -50,9 +51,14 @@ export default function PenghuniDetailPage() {
 
   async function handleConfirmCheckOut() {
     if (!checkOutDate) return
-    await checkOutTenant.mutateAsync({ id, data: { check_out_date: checkOutDate } })
-    setShowCheckOut(false)
-    router.push("/penghuni")
+    try {
+      await checkOutTenant.mutateAsync({ id, data: { check_out_date: checkOutDate } })
+      toast.success("Penghuni berhasil ditandai keluar")
+      setShowCheckOut(false)
+      router.push("/penghuni")
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   // Edit page

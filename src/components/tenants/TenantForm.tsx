@@ -12,6 +12,7 @@ import { Select } from "@/components/ui/form/Select"
 import { FileInput } from "@/components/ui/form/FileInput"
 import { Button } from "@/components/ui/Button"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { fromWhatsappFormat, toWhatsappFormat } from "@/lib/utils"
 
 interface TenantFormProps {
@@ -63,16 +64,26 @@ export function TenantForm({
     }
 
     if (mode === "create") {
-      // Zod's tenantCreateSchema already guaranteed ktp_photo exists at this point,
-      // even though TenantEditInput's type says it's optional.
-      await createTenant.mutateAsync(payload as TenantEditInput & { ktp_photo: File })
-      router.push("/penghuni")
-      return
+      try {
+        // Zod's tenantCreateSchema already guaranteed ktp_photo exists at this point,
+        // even though TenantEditInput's type says it's optional.
+        await createTenant.mutateAsync(payload as TenantEditInput & { ktp_photo: File })
+        toast.success("Penghuni berhasil ditambahkan")
+        router.push("/penghuni")
+        return
+      } catch {
+        toast.error("Gagal menyimpan data, coba lagi.")
+      }
     }
 
     if (tenantId) {
-      await updateTenant.mutateAsync({ id: tenantId, data: payload })
-      onSuccess?.()
+      try {
+        await updateTenant.mutateAsync({ id: tenantId, data: payload })
+        toast.success("Data penghuni berhasil diperbarui")
+        onSuccess?.()
+      } catch {
+        toast.error("Gagal menyimpan data, coba lagi.")
+      }
     }
   }
 

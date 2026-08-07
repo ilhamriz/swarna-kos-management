@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -35,9 +36,14 @@ export function ContactLogSection({ tenantId }: ContactLogSectionProps) {
   })
 
   async function onSubmit(values: ContactLogInput) {
-    await createContactLog.mutateAsync({ tenantId, data: values })
-    reset()
-    setShowForm(false)
+    try {
+      await createContactLog.mutateAsync({ tenantId, data: values })
+      toast.success("Kontak berhasil dicatat")
+      reset()
+      setShowForm(false)
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   if (isLoading) {

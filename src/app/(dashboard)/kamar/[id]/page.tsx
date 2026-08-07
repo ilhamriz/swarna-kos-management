@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import { toast } from "sonner"
 import { useRoom, useUpdateRoom, useDeleteRoom } from "@/lib/queries/rooms"
 import { roomSchema, type RoomInput } from "@/lib/schemas/room"
 import { useForm } from "react-hook-form"
@@ -65,14 +66,24 @@ export default function KamarDetailPage() {
   const hasAnyTenantHistory = room.tenants.length > 0
 
   async function onSubmit(values: RoomInput) {
-    await updateRoom.mutateAsync({ id, data: values })
-    setIsEditing(false)
+    try {
+      await updateRoom.mutateAsync({ id, data: values })
+      toast.success("Kamar berhasil diperbarui")
+      setIsEditing(false)
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   async function handleDeleteConfirm() {
-    await deleteRoom.mutateAsync(id)
-    setIsDeleteOpen(false)
-    router.push("/kamar")
+    try {
+      await deleteRoom.mutateAsync(id)
+      toast.success("Kamar berhasil dihapus")
+      setIsDeleteOpen(false)
+      router.push("/kamar")
+    } catch {
+      toast.error("Gagal menghapus data")
+    }
   }
 
   return (

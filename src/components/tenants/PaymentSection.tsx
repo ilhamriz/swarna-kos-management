@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { toast } from "sonner"
 import { useTenantPayments, useProofSignedUrl, useDeletePayment } from "@/lib/queries/payments"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/Button"
@@ -25,8 +26,13 @@ export function PaymentSection({ tenantId }: PaymentSectionProps) {
 
   async function handleConfirmDelete() {
     if (!deleteTargetId) return
-    await deletePayment.mutateAsync({ id: deleteTargetId, tenantId })
-    setDeleteTargetId(null)
+    try {
+      await deletePayment.mutateAsync({ id: deleteTargetId, tenantId })
+      toast.success("Pembayaran berhasil dihapus")
+      setDeleteTargetId(null)
+    } catch {
+      toast.error("Gagal menghapus data")
+    }
   }
 
   if (isLoading) {

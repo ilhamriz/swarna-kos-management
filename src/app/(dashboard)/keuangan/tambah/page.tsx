@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -32,8 +33,13 @@ export default function TambahPengeluaranPage() {
   })
 
   async function onSubmit(values: ExpenseInput) {
-    await createExpense.mutateAsync(values)
-    router.push("/keuangan")
+    try {
+      await createExpense.mutateAsync(values)
+      toast.success("Pengeluaran berhasil ditambahkan")
+      router.push("/keuangan")
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   return (

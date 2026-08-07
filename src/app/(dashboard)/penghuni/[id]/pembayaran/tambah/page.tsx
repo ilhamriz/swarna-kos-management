@@ -1,6 +1,7 @@
 "use client"
 
 import { useParams, useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { paymentSchema, type PaymentInput } from "@/lib/schemas/payment"
@@ -29,8 +30,13 @@ export default function TambahPembayaranPage() {
   })
 
   async function onSubmit(values: PaymentInput) {
-    await createPayment.mutateAsync({ tenantId: id, data: values })
-    router.push(`/penghuni/${id}`)
+    try {
+      await createPayment.mutateAsync({ tenantId: id, data: values })
+      toast.success("Pembayaran berhasil dicatat")
+      router.push(`/penghuni/${id}`)
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   return (

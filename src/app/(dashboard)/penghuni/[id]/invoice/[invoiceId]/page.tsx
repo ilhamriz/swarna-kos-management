@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { invoiceSchema, type InvoiceInput } from "@/lib/schemas/invoice"
@@ -85,13 +86,23 @@ export default function InvoiceDetailPage() {
 
   async function onSubmit(values: InvoiceInput) {
     if (!invoice) return
-    await updateInvoice.mutateAsync({ id: invoiceId, tenantId, data: values })
-    setIsEditing(false)
+    try {
+      await updateInvoice.mutateAsync({ id: invoiceId, tenantId, data: values })
+      toast.success("Invoice berhasil diperbarui")
+      setIsEditing(false)
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   async function handleDeleteConfirm() {
-    await deleteInvoice.mutateAsync({ id: invoiceId, tenantId })
-    router.push(`/penghuni/${tenantId}`)
+    try {
+      await deleteInvoice.mutateAsync({ id: invoiceId, tenantId })
+      toast.success("Invoice berhasil dihapus")
+      router.push(`/penghuni/${tenantId}`)
+    } catch {
+      toast.error("Gagal menghapus data")
+    }
   }
 
   if (invoiceLoading || paymentsLoading || allInvoicesLoading || !invoice) {

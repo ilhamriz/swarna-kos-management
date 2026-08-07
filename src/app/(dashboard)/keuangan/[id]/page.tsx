@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -52,13 +53,23 @@ export default function ExpenseDetailPage() {
   }, [expense, reset])
 
   async function onSubmit(values: ExpenseInput) {
-    await updateExpense.mutateAsync({ id, data: values })
-    setIsEditing(false)
+    try {
+      await updateExpense.mutateAsync({ id, data: values })
+      toast.success("Pengeluaran berhasil diperbarui")
+      setIsEditing(false)
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   async function handleDeleteConfirm() {
-    await deleteExpense.mutateAsync(id)
-    router.push("/keuangan")
+    try {
+      await deleteExpense.mutateAsync(id)
+      toast.success("Pengeluaran berhasil dihapus")
+      router.push("/keuangan")
+    } catch {
+      toast.error("Gagal menghapus data")
+    }
   }
 
   if (isLoading || !expense) {

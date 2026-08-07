@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { roomSchema, type RoomInput } from "@/lib/schemas/room"
@@ -26,8 +27,13 @@ export default function TambahKamarPage() {
   })
 
   async function onSubmit(values: RoomInput) {
-    await createRoom.mutateAsync(values)
-    router.push("/kamar")
+    try {
+      await createRoom.mutateAsync(values)
+      toast.success("Kamar berhasil ditambahkan")
+      router.push("/kamar")
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   return (

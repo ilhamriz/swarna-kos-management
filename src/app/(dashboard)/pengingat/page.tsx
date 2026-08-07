@@ -1,5 +1,6 @@
 "use client"
 
+import { toast } from "sonner"
 import { useTenants } from "@/lib/queries/tenants"
 import { useAllInvoices } from "@/lib/queries/invoices"
 import { useAllPayments } from "@/lib/queries/payments"
@@ -61,13 +62,18 @@ export default function PengingatPage() {
     )
     window.open(`https://wa.me/${tenant.phone_number}?text=${message}`, "_blank")
 
-    await createContactLog.mutateAsync({
-      tenantId: tenant.id,
-      data: {
-        method: "whatsapp",
-        notes: `Pengingat tagihan otomatis: ${formatRupiah(reminderInfo.totalTunggakan)}`,
-      },
-    })
+    try {
+      await createContactLog.mutateAsync({
+        tenantId: tenant.id,
+        data: {
+          method: "whatsapp",
+          notes: `Pengingat tagihan otomatis: ${formatRupiah(reminderInfo.totalTunggakan)}`,
+        },
+      })
+      toast.success("Kontak berhasil dicatat")
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   return (

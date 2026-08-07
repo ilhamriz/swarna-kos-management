@@ -1,6 +1,7 @@
 "use client"
 
 import { useParams, useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { invoiceSchema, type InvoiceInput } from "@/lib/schemas/invoice"
@@ -27,8 +28,13 @@ export default function TambahInvoicePage() {
   })
 
   async function onSubmit(values: InvoiceInput) {
-    await createInvoice.mutateAsync({ tenantId: id, data: values })
-    router.push(`/penghuni/${id}`)
+    try {
+      await createInvoice.mutateAsync({ tenantId: id, data: values })
+      toast.success("Invoice berhasil dibuat")
+      router.push(`/penghuni/${id}`)
+    } catch {
+      toast.error("Gagal menyimpan data, coba lagi.")
+    }
   }
 
   return (

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Providers } from "@/components/providers/providers"
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister"
+import { Toaster } from "sonner"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,17 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ServiceWorkerRegister />
         <Providers>{children}</Providers>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: "var(--color-bg-surface)",
+              color: "var(--color-text-primary)",
+              border: "1px solid var(--color-border)",
+            },
+          }}
+        />
       </body>
     </html>
   )
