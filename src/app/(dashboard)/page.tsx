@@ -44,13 +44,15 @@ export default function BerandaPage() {
     allPayments ?? []
   )
 
+  const loadingSkeletonKeys = ["skeleton-1", "skeleton-2", "skeleton-3", "skeleton-4"]
+
   if (isLoading) {
     return (
       <div className="p-4 space-y-3">
         <div className="h-6 w-32 bg-bg-elevated rounded animate-pulse" />
         <div className="grid grid-cols-2 gap-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-20 bg-bg-elevated rounded-xl animate-pulse" />
+          {loadingSkeletonKeys.map((key) => (
+            <div key={key} className="h-20 bg-bg-elevated rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
