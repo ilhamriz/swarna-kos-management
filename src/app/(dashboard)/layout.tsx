@@ -1,3 +1,4 @@
+// app/(dashboard)/layout.tsx
 "use client"
 
 import { usePathname } from "next/navigation"
